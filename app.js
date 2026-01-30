@@ -58,7 +58,7 @@ openHistoryBtn.addEventListener("click", () => {
   historyList.innerHTML = "";
 
   if (data.washHistory.length === 0) {
-    historyList.textContent = "No wash events yet.";
+    historyList.textContent = "Ainda sem lavagens.";
   } else {
     // Show events in reverse chronological order
     data.washHistory.slice().reverse().forEach((event, reverseIndex) => {
