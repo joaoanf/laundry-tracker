@@ -1,0 +1,242 @@
+/* =====================================================
+   Global Styles
+   Base styles for the whole app
+===================================================== */
+
+body {
+  font-family: system-ui, sans-serif; /* Modern system font for legibility */
+  max-width: 500px;                  /* Limits width for readability on desktop */
+  margin: auto;                       /* Centers the app horizontally */
+  padding: 20px;                      /* Adds space inside the page edges */
+  background: #c6c4c4;               /* Light gray background */
+}
+
+h1 {
+  text-align: center;                 /* Centered page title */
+}
+
+/* =====================================================
+   Buttons
+   Default styling for buttons, including color, size, and rounded edges
+===================================================== */
+
+/* Main buttons, includes "View Wash History", "Add", and dthe "Edit" and "Delete" on the Wash history */
+button {
+  width: 100%;                        /* Fill parent container width */
+  padding: 15px;                       /* Bigger click/tap area */
+  font-size: 18px;                     /* Larger text for readability */
+  border: none;                        /* Remove default border */
+  border-radius: 8px;                  /* Rounded corners */
+  background: #47a24a;                 /* Green primary color */
+  color: white;                        /* White text */
+  cursor: pointer;                      /* Pointer cursor on hover */
+  /*margin-left: 25%;*/
+}
+
+#newWashBtn {
+  display: block;        /* Makes margin auto work */
+  margin: 0 auto 20px;   /* Horizontally center with auto, bottom margin for spacing */
+  padding: 15px 30px;    /* Optional: bigger button */
+  width: auto;           /* Optional: keep natural width */
+}
+
+/* Modal buttons (Cancel / Save) */
+.modalButtons {
+  display: flex;                       /* Horizontal layout */
+  gap: 15px;                           /* Space between buttons */
+  margin-top: 20px;                     /* Space above buttons */
+}
+
+.modalButtons button {
+  flex: 1;                             /* Buttons take equal width */
+}
+
+/* List item buttons (Edit / Delete) */
+li button {
+  padding: 5px 5px;                   /* Smaller buttons for list items */
+  font-size: 14px;
+  width: 100%;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Specific colors for Edit and Delete buttons */
+li button:nth-child(2) { /* Edit button */
+  background: #ffc107;                 /* Amber color */
+  color: black;
+}
+
+li button:nth-child(3) { /* Delete button */
+  background: #f44336;                 /* Red color */
+  color: white;
+}
+
+.historyCard button.deleteEventBtn {
+  background: #f44336;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+
+/* =====================================================
+   Lists
+   Styling for item list and laundry list elements
+===================================================== */
+
+ul {
+  list-style: none;                    /* Remove bullet points */
+  padding: 0;                           /* Remove default padding */
+}
+
+/* Individual laundry items */
+li {
+  background: white;                    /* White card background */
+  padding: 5px 10px;                        /* Inner spacing */
+  font-size: 16px;
+  margin-top: 10px;                     /* Space between items */
+  border-radius: 6px;                   /* Rounded corners */
+  border: none;
+  cursor: pointer;
+  margin-left: 0; /* remove previous left margins */
+  display: flex;                        /* Align text and buttons horizontally */
+  align-items: center;                  /* Vertically center content */
+  justify-content: space-between;       /* Push buttons to the right */
+}
+
+/* =====================================================
+   Modals
+   Overlay pop-ups for wash checklist and history
+===================================================== */
+
+/* Dark semi-transparent overlay covering the whole screen */
+.modal {
+  position: fixed;                     /* Fixed position over entire page */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);        /* Semi-transparent black */
+  display: flex; 
+  align-items: center;                 /* Center modal vertically */
+  justify-content: center;             /* Center modal horizontally */
+  z-index: 1000;                       /* Make sure it sits above everything else */
+}
+
+/* History modal slightly lower */
+#historyModal {
+  z-index: 1000; 
+}
+
+/* Wash modal (used for new washes or editing) on top */
+#washModal {
+  z-index: 1100; 
+}
+
+/* The modal content box */
+.modalContent {
+  background: white;                   /* White background */
+  width: 100%;                          /* Fill up to max width */
+  max-width: 300px;                     /* Restrict maximum width */
+  padding: 20px;                        /* Inner padding */
+  border-radius: 10px;                  /* Rounded corners */
+}
+
+/* Hide elements by default */
+.hidden {
+  display: none;
+}
+
+/* Individual checklist rows inside modal */
+#checklist div {
+  margin: 10px 0;                       /* Space between each item */
+}
+
+/* =====================================================
+   Add New Item Input
+===================================================== */
+
+#addItemContainer {
+  display: flex;                        /* Input + button horizontally aligned */
+  gap: 10px;                             /* Space between input and button */
+  margin-bottom: 20px;                   /* Space below container */
+}
+
+#addItemContainer input {
+  flex: 1;                               /* Input takes remaining space */
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;               /* Light gray border */
+  font-size: 16px;
+}
+
+#addItemContainer button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #2196f3;                  /* Blue accent color */
+  color: white;
+  font-size: 16px;
+}
+
+/* =====================================================
+   Wash History
+===================================================== */
+
+#historyList {
+  max-height: 300px;                     /* Limit height of history */
+  overflow-y: auto;                      /* Scroll if content exceeds height */
+  margin-top: 10px;
+  padding-right: 5px;                    /* Avoid scrollbar overlapping content */
+}
+
+/* Individual history “cards” */
+.historyCard {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 12px 15px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Slight shadow for depth */
+}
+
+.historyCard h4 {
+  margin: 0 0 6px 0;                     /* Title spacing */
+  font-size: 14px;
+  color: #333;                           /* Dark gray for readability */
+}
+
+.historyCard p {
+  margin: 0;
+  font-size: 16px;
+  color: #555;                           /* Medium gray for text */
+  word-wrap: break-word;                 /* Prevent long text overflow */
+}
+
+/* =====================================================
+   Responsive / Mobile Adjustments
+===================================================== */
+
+@media (max-width: 500px) {
+
+  /* Shrink history card text and padding on small screens */
+  .historyCard {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  /* Shrink buttons inside list items for mobile */
+  li button {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  /* Make history list shorter on small screens */
+  #historyList {
+    max-height: 40vh; /* 40% of viewport height */
+  }
+
+}

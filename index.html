@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Laundry Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- For the phone -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#47a24a">
+
+</head>
+<body>
+
+  <h1>🧺 Laundry Tracker</h1>
+
+  <button id="newWashBtn">New Wash</button>
+
+  <h2>Your Items</h2>
+
+  <div id="addItemContainer">
+  <input type="text" id="newItemInput" placeholder="Add new item" />
+  <button id="addItemBtn">Add</button>
+  </div>
+
+  <ul id="itemList"></ul>
+
+  <!-- Wash Modal -->
+  <div id="washModal" class="modal hidden">
+    <div class="modalContent">
+        <h2>Select washed items</h2>
+        <div id="checklist"></div>
+
+        <div class="modalButtons">
+        <button id="cancelWash">Cancel</button>
+        <button id="saveWash">Save Wash</button>
+        </div>
+    </div>
+  </div>
+
+  <!-- History Modal -->
+  <div id="historyModal" class="modal hidden">
+    <div class="modalContent">
+      <h2>Wash History</h2>
+      <div id="historyList"></div>
+      <button id="closeHistory">Close</button>
+    </div>
+  </div>
+
+<!-- Button to open history -->
+  <button id="openHistoryBtn" style="margin-top: 20px; background:#ee8f01;">View Wash History</button>
+
+  <script src="app.js"></script>
+</body>
+</html>

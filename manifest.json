@@ -1,0 +1,20 @@
+{
+  "name": "Laundry Tracker",
+  "short_name": "Laundry",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#c6c4c4",
+  "theme_color": "#47a24a",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
