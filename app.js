@@ -2,6 +2,16 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js");
 }
 
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js").then(reg => {
+    if (reg.installing) {
+      console.log("Installing service worker...");
+    } else if (reg.active) {
+      console.log("App ready for offline use");
+    }
+  });
+}
+
 const STORAGE_KEY = "laundryData";
 
 // Load saved data or create default
