@@ -23,10 +23,10 @@ function loadData() {
 
   return {
     items: [
-      { name: "T-Shirts", lastWashed: null },
-      { name: "Jeans", lastWashed: null },
-      { name: "Towels", lastWashed: null },
-      { name: "Bedsheets", lastWashed: null }
+      { name: "Lençóis", lastWashed: null },
+      { name: "Toalha de Banho", lastWashed: null },
+      { name: "Toalha de mesa", lastWashed: null },
+      { name: "Pijama azul", lastWashed: null }
     ],
     washHistory: []
   };
@@ -77,17 +77,17 @@ openHistoryBtn.addEventListener("click", () => {
 
         // --- Edit Button ---
         const editEventBtn = document.createElement("button");
-        editEventBtn.textContent = "Edit";
+        editEventBtn.textContent = "Editar";
         editEventBtn.addEventListener("click", () => {
             openEditWashModal(event, reverseIndex);
         });
 
         // --- Delete Button for History Event ---
         const deleteEventBtn = document.createElement("button");
-        deleteEventBtn.textContent = "Delete";
+        deleteEventBtn.textContent = "Apagar";
         deleteEventBtn.classList.add("deleteEventBtn");
         deleteEventBtn.addEventListener("click", () => {
-            if (confirm(`Delete this wash event from ${event.date}?`)) {
+            if (confirm(`Apagar a lavagem de ${event.date}?`)) {
                 const originalIndex = data.washHistory.indexOf(event);
                 if (originalIndex > -1) data.washHistory.splice(originalIndex, 1);
 
@@ -156,19 +156,19 @@ function renderItems() {
     const textSpan = document.createElement("span");
     let text = item.name;
     if (item.lastWashed) {
-      text += ` — Last washed: ${item.lastWashed}`;
+      text += ` — Lavado a ${item.lastWashed}`;
     } else {
-      text += " — Never washed";
+      text += " — Nunca lavado";
     }
     textSpan.textContent = text;
     li.appendChild(textSpan);
 
     // Edit button
     const editBtn = document.createElement("button");
-    editBtn.textContent = "Edit";
+    editBtn.textContent = "Editar";
     editBtn.style.marginLeft = "10px";
     editBtn.addEventListener("click", () => {
-      const newName = prompt("Enter new name for item:", item.name);
+      const newName = prompt("Inserir novo nome:", item.name);
       if (newName && newName.trim() !== "") {
         data.items[index].name = newName.trim();
         saveData();
@@ -178,10 +178,10 @@ function renderItems() {
 
     // Delete button
     const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "Delete";
+    deleteBtn.textContent = "Apagar";
     deleteBtn.style.marginLeft = "5px";
     deleteBtn.addEventListener("click", () => {
-      if (confirm(`Delete "${item.name}"?`)) {
+      if (confirm(`Apagar "${item.name}"?`)) {
         data.items.splice(index, 1);
         saveData();
         renderItems();
@@ -278,7 +278,8 @@ function openNewWashModal() {
 
   // --- Attach a temporary save handler for new washes ---
   const saveHandler = () => {
-    const today = new Date().toLocaleString();
+    //const today = new Date().toLocaleString(); //with hours
+    const today = new Date().toLocaleDateString(); //with hours
     const washedItems = [];
     const checkboxes = checklist.querySelectorAll("input");
 
