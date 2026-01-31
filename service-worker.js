@@ -9,7 +9,7 @@
  * Example: v1 → v2 → v3
  * This forces old caches to be deleted
  */
-const CACHE_NAME = "laundry-tracker-v6";
+const CACHE_NAME = "laundry-tracker-v7";
 
 /**
  * Files that should be cached for offline use
