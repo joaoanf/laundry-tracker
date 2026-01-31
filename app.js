@@ -1,6 +1,6 @@
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js");
-}
+/* =====================================================
+   Service Worker (Offline Support)
+===================================================== */
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js").then(reg => {
@@ -12,9 +12,28 @@ if ("serviceWorker" in navigator) {
   });
 }
 
+/* =====================================================
+   Constants & Utilities
+===================================================== */
+
 const STORAGE_KEY = "laundryData";
 
-// Load saved data or create default
+/**
+ * Format ISO date (YYYY-MM-DD) into display format (DD-MM-YYYY)
+ */
+function formatDateDisplay(isoDate) {
+  if (!isoDate) return "";
+  const [year, month, day] = isoDate.split("-");
+  return `${day}-${month}-${year}`;
+}
+
+/* =====================================================
+   Storage Handling
+===================================================== */
+
+/**
+ * Load app data from localStorage or return defaults
+ */
 function loadData() {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) {
@@ -32,154 +51,77 @@ function loadData() {
   };
 }
 
-// Save data
+/**
+ * Persist app data to localStorage
+ */
 function saveData() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
+// App state
 let data = loadData();
 
-// Elements
+/* =====================================================
+   DOM Elements
+===================================================== */
+
 const list = document.getElementById("itemList");
-const button = document.getElementById("newWashBtn");
+const newWashBtn = document.getElementById("newWashBtn");
 const modal = document.getElementById("washModal");
 const checklist = document.getElementById("checklist");
 const cancelBtn = document.getElementById("cancelWash");
 const saveBtn = document.getElementById("saveWash");
+const washDateInput = document.getElementById("washDate");
+
 const addInput = document.getElementById("newItemInput");
 const addBtn = document.getElementById("addItemBtn");
+
 const openHistoryBtn = document.getElementById("openHistoryBtn");
 const historyModal = document.getElementById("historyModal");
 const historyList = document.getElementById("historyList");
 const closeHistoryBtn = document.getElementById("closeHistory");
 
-// Open history modal
-openHistoryBtn.addEventListener("click", () => {
-  historyList.innerHTML = "";
+/* =====================================================
+   Rendering
+===================================================== */
 
-  if (data.washHistory.length === 0) {
-    historyList.textContent = "Ainda sem lavagens.";
-  } else {
-    // Show events in reverse chronological order
-    data.washHistory.slice().reverse().forEach((event, reverseIndex) => {
-        const card = document.createElement("div");
-        card.classList.add("historyCard");
-
-        // Show date/time
-        const dateHeading = document.createElement("h4");
-        dateHeading.textContent = event.date;
-        card.appendChild(dateHeading);
-
-        // Show items
-        const itemsPara = document.createElement("p");
-        itemsPara.textContent = event.items.join(", ");
-        card.appendChild(itemsPara);
-
-        // --- Edit Button ---
-        const editEventBtn = document.createElement("button");
-        editEventBtn.textContent = "Editar";
-        editEventBtn.addEventListener("click", () => {
-            openEditWashModal(event, reverseIndex);
-        });
-
-        // --- Delete Button for History Event ---
-        const deleteEventBtn = document.createElement("button");
-        deleteEventBtn.textContent = "Apagar";
-        deleteEventBtn.classList.add("deleteEventBtn");
-        deleteEventBtn.addEventListener("click", () => {
-            if (confirm(`Apagar a lavagem de ${event.date}?`)) {
-                const originalIndex = data.washHistory.indexOf(event);
-                if (originalIndex > -1) data.washHistory.splice(originalIndex, 1);
-
-                // Recompute lastWashed for items
-                updateItemsLastWashed();
-
-                saveData();
-                renderItems();
-                openHistoryBtn.click(); // refresh history modal
-            }
-        });
-
-        // --- Create a wrapper for the buttons ---
-        const buttonWrapper = document.createElement("div");
-        buttonWrapper.style.display = "flex";    // Align horizontally
-        buttonWrapper.style.gap = "5px";         // Small gap between buttons
-        buttonWrapper.style.marginTop = "10px";  // Space from text
-
-        // Append buttons into wrapper
-        buttonWrapper.appendChild(editEventBtn);
-        buttonWrapper.appendChild(deleteEventBtn);
-
-        // Append wrapper to card
-        card.appendChild(buttonWrapper);
-
-        historyList.appendChild(card);
-    });
-  }
-
-  historyModal.classList.remove("hidden");
-});
-
-
-// Close history
-closeHistoryBtn.addEventListener("click", () => {
-  historyModal.classList.add("hidden");
-});
-
-
-// Add new laundry item
-addBtn.addEventListener("click", () => {
-  const name = addInput.value.trim();
-  if (name === "") return;
-
-  // Add to data
-  data.items.push({ name, lastWashed: null });
-
-  saveData();
-  renderItems();
-
-  addInput.value = "";
-});
-
-// Also add the item if enter is pressed
-addInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") addBtn.click();
-});
-
-// Render main list
+/**
+ * Render the main laundry item list
+ */
 function renderItems() {
   list.innerHTML = "";
 
   data.items.forEach((item, index) => {
     const li = document.createElement("li");
-    
+
+    // Item text
     const textSpan = document.createElement("span");
     let text = item.name;
+
     if (item.lastWashed) {
       text += ` — Lavado a ${item.lastWashed}`;
     } else {
       text += " — Nunca lavado";
     }
+
     textSpan.textContent = text;
     li.appendChild(textSpan);
 
-    // Edit button
+    // --- Edit Button ---
     const editBtn = document.createElement("button");
     editBtn.textContent = "Editar";
-    editBtn.style.marginLeft = "10px";
     editBtn.addEventListener("click", () => {
       const newName = prompt("Inserir novo nome:", item.name);
-      if (newName && newName.trim() !== "") {
+      if (newName && newName.trim()) {
         data.items[index].name = newName.trim();
         saveData();
         renderItems();
       }
     });
 
-    // Delete button
+    // --- Delete Button ---
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Apagar";
-    deleteBtn.style.marginLeft = "5px";
     deleteBtn.addEventListener("click", () => {
       if (confirm(`Apagar "${item.name}"?`)) {
         data.items.splice(index, 1);
@@ -188,85 +130,148 @@ function renderItems() {
       }
     });
 
-    // Create a button wrapper
+    // Button wrapper
     const buttonWrapper = document.createElement("div");
-    buttonWrapper.style.display = "flex";  // Align buttons horizontally
-    buttonWrapper.style.gap = "5px";       // Small gap between Edit/Delete
+    buttonWrapper.style.display = "flex";
+    buttonWrapper.style.gap = "5px";
 
     buttonWrapper.appendChild(editBtn);
     buttonWrapper.appendChild(deleteBtn);
-
-    li.appendChild(buttonWrapper); // Append wrapper to li
+    li.appendChild(buttonWrapper);
 
     list.appendChild(li);
   });
 }
 
+/* =====================================================
+   History Modal
+===================================================== */
 
-// Build checklist
-function openModal() {
-  checklist.innerHTML = "";
+/**
+ * Open and render wash history modal
+ */
+openHistoryBtn.addEventListener("click", () => {
+  historyList.innerHTML = "";
 
-  data.items.forEach((item, index) => {
-    const row = document.createElement("div");
+  if (data.washHistory.length === 0) {
+    historyList.textContent = "Ainda sem lavagens.";
+  } else {
+    [...data.washHistory]
+      .sort((a, b) => new Date(b.date) - new Date(a.date)) // Newest first
+      .forEach(event => {
+        const card = document.createElement("div");
+        card.classList.add("historyCard");
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.id = `item-${index}`;
+        // Date
+        const dateHeading = document.createElement("h4");
+        dateHeading.textContent = formatDateDisplay(event.date);
+        card.appendChild(dateHeading);
 
-    const label = document.createElement("label");
-    label.htmlFor = checkbox.id;
-    label.textContent = " " + item.name;
+        // Items
+        const itemsPara = document.createElement("p");
+        itemsPara.textContent = event.items.join(", ");
+        card.appendChild(itemsPara);
 
-    row.appendChild(checkbox);
-    row.appendChild(label);
-    checklist.appendChild(row);
-  });
+        // --- Edit Button ---
+        const editEventBtn = document.createElement("button");
+        editEventBtn.textContent = "Editar";
+        editEventBtn.addEventListener("click", () => {
+          openEditWashModal(event);
+        });
 
-  modal.classList.remove("hidden");
-}
+        // --- Delete Button ---
+        const deleteEventBtn = document.createElement("button");
+        deleteEventBtn.textContent = "Apagar";
+        deleteEventBtn.classList.add("deleteEventBtn");
+        deleteEventBtn.addEventListener("click", () => {
+          if (confirm(`Apagar a lavagem de ${event.date}?`)) {
+            const index = data.washHistory.indexOf(event);
+            if (index > -1) data.washHistory.splice(index, 1);
 
-// Close modal
-function closeModal() {
-  modal.classList.add("hidden");
-}
+            updateItemsLastWashed();
+            saveData();
+            renderItems();
+            openHistoryBtn.click();
+          }
+        });
 
-// Events
-button.addEventListener("click", openNewWashModal);
-cancelBtn.addEventListener("click", closeModal);
+        // Button wrapper
+        const buttonWrapper = document.createElement("div");
+        buttonWrapper.style.display = "flex";
+        buttonWrapper.style.gap = "5px";
+        buttonWrapper.style.marginTop = "10px";
 
+        buttonWrapper.appendChild(editEventBtn);
+        buttonWrapper.appendChild(deleteEventBtn);
+        card.appendChild(buttonWrapper);
+
+        historyList.appendChild(card);
+      });
+  }
+
+  historyModal.classList.remove("hidden");
+});
+
+// Close history modal
+closeHistoryBtn.addEventListener("click", () => {
+  historyModal.classList.add("hidden");
+});
+
+/* =====================================================
+   Data Logic
+===================================================== */
+
+/**
+ * Recalculate last washed date for all items
+ * Uses true chronological order (not array order)
+ */
 function updateItemsLastWashed() {
-  // Reset all lastWashed
+  // Reset
   data.items.forEach(item => {
     item.lastWashed = null;
   });
 
-  // Go through all events in chronological order
-  data.washHistory.forEach(event => {
+  // Oldest → Newest so newest wins
+  const sortedEvents = [...data.washHistory].sort(
+    (a, b) => new Date(a.date) - new Date(b.date)
+  );
+
+  sortedEvents.forEach(event => {
     event.items.forEach(itemName => {
       const item = data.items.find(i => i.name === itemName);
       if (item) {
-        // Update lastWashed to the latest event date
-        item.lastWashed = event.date;
+        item.lastWashed = formatDateDisplay(event.date);
       }
     });
   });
 }
 
+/* =====================================================
+   Wash Modal
+===================================================== */
 
+/**
+ * Open modal for creating a new wash
+ */
 function openNewWashModal() {
-  // Build checklist as usual
   checklist.innerHTML = "";
 
-  data.items.forEach((item, index) => {
+  // Default date = today
+  washDateInput.value = new Date().toISOString().split("T")[0];
+
+  // Alphabetical item list
+  const sortedItems = [...data.items].sort((a, b) =>
+    a.name.localeCompare(b.name, "pt", { sensitivity: "base" })
+  );
+
+  sortedItems.forEach(item => {
     const row = document.createElement("div");
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.id = `item-${index}`;
+    checkbox.dataset.name = item.name;
 
     const label = document.createElement("label");
-    label.htmlFor = checkbox.id;
     label.textContent = " " + item.name;
 
     row.appendChild(checkbox);
@@ -276,31 +281,25 @@ function openNewWashModal() {
 
   modal.classList.remove("hidden");
 
-  // --- Attach a temporary save handler for new washes ---
   const saveHandler = () => {
-    //const today = new Date().toLocaleString(); //with hours
-    const today = new Date().toLocaleDateString(); //with hours
+    const selectedDate = washDateInput.value;
     const washedItems = [];
-    const checkboxes = checklist.querySelectorAll("input");
 
-    checkboxes.forEach((box, index) => {
-      if (box.checked) {
-        data.items[index].lastWashed = today;
-        washedItems.push(data.items[index].name);
-      }
+    checklist.querySelectorAll("input").forEach(box => {
+      if (box.checked) washedItems.push(box.dataset.name);
     });
 
-    if (washedItems.length > 0) {
+    if (washedItems.length && selectedDate) {
       data.washHistory.push({
-        date: today,
+        date: selectedDate,
         items: washedItems
       });
 
+      updateItemsLastWashed();
       saveData();
       renderItems();
     }
 
-    // Remove this listener so it doesn’t fire next time
     saveBtn.removeEventListener("click", saveHandler);
     closeModal();
   };
@@ -308,25 +307,26 @@ function openNewWashModal() {
   saveBtn.addEventListener("click", saveHandler);
 }
 
-
-function openEditWashModal(eventToEdit, reverseIndex) {
+/**
+ * Open modal for editing an existing wash
+ */
+function openEditWashModal(eventToEdit) {
   checklist.innerHTML = "";
+  washDateInput.value = eventToEdit.date;
 
-  // Build checkboxes for all items
-  data.items.forEach((item, index) => {
+  const sortedItems = [...data.items].sort((a, b) =>
+    a.name.localeCompare(b.name, "pt", { sensitivity: "base" })
+  );
+
+  sortedItems.forEach(item => {
     const row = document.createElement("div");
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.id = `item-edit-${index}`;
-
-    // Pre-check if this item was part of the event
-    if (eventToEdit.items.includes(item.name)) {
-      checkbox.checked = true;
-    }
+    checkbox.dataset.name = item.name;
+    checkbox.checked = eventToEdit.items.includes(item.name);
 
     const label = document.createElement("label");
-    label.htmlFor = checkbox.id;
     label.textContent = " " + item.name;
 
     row.appendChild(checkbox);
@@ -334,40 +334,65 @@ function openEditWashModal(eventToEdit, reverseIndex) {
     checklist.appendChild(row);
   });
 
-  // Show modal
   modal.classList.remove("hidden");
 
-  // Temporary save handler
-    const saveHandler = () => {
-        const checkedItems = [];
-        const checkboxes = checklist.querySelectorAll("input");
+  const saveHandler = () => {
+    const checkedItems = [];
 
-        checkboxes.forEach((box, index) => {
-            if (box.checked) {
-            checkedItems.push(data.items[index].name);
-            }
-        });
+    checklist.querySelectorAll("input").forEach(box => {
+      if (box.checked) checkedItems.push(box.dataset.name);
+    });
 
-        // Update only the event items
-        eventToEdit.items = checkedItems;
+    eventToEdit.date = washDateInput.value;
+    eventToEdit.items = checkedItems;
 
-        // --- Recompute lastWashed for all items ---
-        updateItemsLastWashed();
+    updateItemsLastWashed();
+    saveData();
+    renderItems();
+    openHistoryBtn.click();
 
-        saveData();
-        renderItems();
-        openHistoryBtn.click(); // refresh history modal
-
-        // Cleanup
-        saveBtn.removeEventListener("click", saveHandler);
-        closeModal();
-    };
-
+    saveBtn.removeEventListener("click", saveHandler);
+    closeModal();
+  };
 
   saveBtn.addEventListener("click", saveHandler);
 }
 
+/**
+ * Close wash modal
+ */
+function closeModal() {
+  modal.classList.add("hidden");
+}
 
+/* =====================================================
+   Add Item
+===================================================== */
 
-// Initial render
+addBtn.addEventListener("click", () => {
+  const name = addInput.value.trim();
+  if (!name) return;
+
+  data.items.push({ name, lastWashed: null });
+  saveData();
+  renderItems();
+  addInput.value = "";
+});
+
+// Enter key support
+addInput.addEventListener("keypress", e => {
+  if (e.key === "Enter") addBtn.click();
+});
+
+/* =====================================================
+   Event Bindings
+===================================================== */
+
+newWashBtn.addEventListener("click", openNewWashModal);
+cancelBtn.addEventListener("click", closeModal);
+
+/* =====================================================
+   Init
+===================================================== */
+
 renderItems();
