@@ -137,6 +137,40 @@ li {
   z-index: 1100; 
 }
 
+/* Scrollable checklist inside wash modal */
+#checklist {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+/* Bigger checklist rows */
+#checklist div {
+  font-size: 18px;
+  padding: 8px 0;
+}
+
+/* Bigger checkboxes */
+#checklist input[type="checkbox"] {
+  transform: scale(1.3);
+  margin-right: 8px;
+}
+
+/* Date row layout */
+.dateRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+/* Compact date input */
+#washDate {
+  width: 140px;
+  padding: 6px;
+  font-size: 14px;
+}
+
 /* The modal content box */
 .modalContent {
   background: white;                   /* White background */
