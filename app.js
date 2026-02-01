@@ -61,6 +61,67 @@ function saveData() {
 // App state
 let data = loadData();
 
+// to export backup file
+function exportBackup() {
+  const backupData = JSON.stringify(data, null, 2);
+  const backupPayload = {version: 1, exportedAt: new Date().toISOString(),data};
+
+  const blob = new Blob([JSON.stringify(backupPayload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const date = new Date().toISOString().split("T")[0];
+  const filename = `laundry-backup-${date}.json`;
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+// to import backup file
+function importBackup(file) {
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    try {
+      const payload = JSON.parse(reader.result);
+
+      // Validate backup structure
+      if (
+        !payload ||
+        payload.version !== 1 ||
+        !payload.data ||
+        !Array.isArray(payload.data.items) ||
+        !Array.isArray(payload.data.washHistory)
+      ) {
+        alert("Ficheiro inválido. Estrutura de backup incorreta.");
+        return;
+      }
+
+      if (!confirm("Isto vai substituir todos os dados atuais. Continuar?")) {
+        return;
+      }
+
+      // Restore data
+      data = payload.data;
+
+      updateItemsLastWashed();
+      saveData();
+      renderItems();
+
+      alert("Backup restaurado com sucesso!");
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao ler o ficheiro de backup.");
+    }
+  };
+
+  reader.readAsText(file);
+}
+
+
 /* =====================================================
    DOM Elements
 ===================================================== */
@@ -80,6 +141,11 @@ const openHistoryBtn = document.getElementById("openHistoryBtn");
 const historyModal = document.getElementById("historyModal");
 const historyList = document.getElementById("historyList");
 const closeHistoryBtn = document.getElementById("closeHistory");
+
+const exportDataBtn = document.getElementById("exportDataBtn");
+const importDataBtn = document.getElementById("importDataBtn");
+const importFileInput = document.getElementById("importFileInput");
+
 
 /* =====================================================
    Rendering
@@ -110,6 +176,7 @@ function renderItems() {
     // --- Edit Button ---
     const editBtn = document.createElement("button");
     editBtn.textContent = "Editar";
+    editBtn.classList.add("editBtn");
     editBtn.addEventListener("click", () => {
       const newName = prompt("Inserir novo nome:", item.name);
       if (newName && newName.trim()) {
@@ -122,6 +189,7 @@ function renderItems() {
     // --- Delete Button ---
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Apagar";
+    deleteBtn.classList.add("deleteBtn");
     deleteBtn.addEventListener("click", () => {
       if (confirm(`Apagar "${item.name}"?`)) {
         data.items.splice(index, 1);
@@ -373,6 +441,11 @@ addBtn.addEventListener("click", () => {
   const name = addInput.value.trim();
   if (!name) return;
 
+  if (data.items.some(i => i.name.toLowerCase() === name.toLowerCase())) {
+    alert("Esse item já existe.");
+    return;
+  }
+
   data.items.push({ name, lastWashed: null });
   saveData();
   renderItems();
@@ -391,8 +464,24 @@ addInput.addEventListener("keypress", e => {
 newWashBtn.addEventListener("click", openNewWashModal);
 cancelBtn.addEventListener("click", closeModal);
 
+exportDataBtn.addEventListener("click", exportBackup);
+
+importDataBtn.addEventListener("click", () => {
+  importFileInput.click();
+});
+
+importFileInput.addEventListener("change", e => {
+  const file = e.target.files[0];
+  if (file) importBackup(file);
+  importFileInput.value = ""; // Allow re-importing same file
+});
+
+
 /* =====================================================
    Init
 ===================================================== */
 
-renderItems();
+document.addEventListener("DOMContentLoaded", () => {
+  renderItems();
+  updateItemsLastWashed();
+});
