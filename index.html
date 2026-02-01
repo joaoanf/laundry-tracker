@@ -14,7 +14,7 @@
 </head>
 <body>
 
-  <h1>🧺 Laundry Tracker</h1>
+  <h1>🧺 Laundry Tracker v7</h1>
 
   <button id="newWashBtn">Nova Lavagem</button>
 
@@ -37,13 +37,11 @@
           <input type="date" id="washDate">
         </div>
 
-
         <div id="checklist"></div>
 
-
         <div class="modalButtons">
-        <button id="cancelWash">Cancelar</button>
-        <button id="saveWash">Guardar Lavagem</button>
+          <button id="cancelWash">Cancelar</button>
+          <button id="saveWash">Guardar Lavagem</button>
         </div>
     </div>
   </div>
@@ -56,10 +54,18 @@
       <button id="closeHistory">Fechar</button>
     </div>
   </div>
-
+  
 <!-- Button to open history -->
   <button id="openHistoryBtn" style="margin-top: 20px; background:#ee8f01;">Histórico de Lavagens</button>
 
+  <!-- Button to export and import data -->
+  <div class="buttonContainer" style="margin-top: 20px;">
+    <button id="exportDataBtn" style="background:#607d8b;">Exportar Backup</button>
+    <button id="importDataBtn" style="background:#9c27b0;">Importar Backup</button>
+  </div>
+
+<input type="file" id="importFileInput" accept="application/json" hidden>
   <script src="app.js"></script>
 </body>
 </html>
+
