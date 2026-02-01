@@ -198,7 +198,7 @@ li {
   display: flex;                        /* Input + button horizontally aligned */
   gap: 10px;                             /* Space between input and button */
   margin-bottom: 20px;                   /* Space below container */
-  padding: 5px 10px;
+  padding: 5px 0px;
 }
 
 #addItemContainer input {
