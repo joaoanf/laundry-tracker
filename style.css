@@ -276,4 +276,19 @@ li {
     max-height: 40vh; /* 40% of viewport height */
   }
 
+   /* Adjust add item container for mobile */
+  #addItemContainer {
+    gap: 5px; /* Reduce gap between input and button */
+  }
+
+  #addItemContainer input {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  #addItemContainer button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+   
 }
