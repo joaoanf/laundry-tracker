@@ -20,24 +20,39 @@ h1 {
    Default styling for buttons, including color, size, and rounded edges
 ===================================================== */
 
-/* Main buttons, includes "View Wash History", "Add", and dthe "Edit" and "Delete" on the Wash history */
+/* Main buttons, includes "View Wash History", "Add", and the "Edit" and "Delete" on the Wash history */
 button {
   width: 100%;                        /* Fill parent container width */
   padding: 15px;                       /* Bigger click/tap area */
   font-size: 18px;                     /* Larger text for readability */
-  border: none;                        /* Remove default border */
+  border: 1px solid #494848;               /* Subtle white border for polish */
   border-radius: 8px;                  /* Rounded corners */
   background: #47a24a;                 /* Green primary color */
   color: white;                        /* White text */
   cursor: pointer;                      /* Pointer cursor on hover */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Slight shadow for depth */  
   /*margin-left: 25%;*/
 }
 
+/* Used for "New Wash" button */
 #newWashBtn {
   display: block;        /* Makes margin auto work */
   margin: 0 auto 20px;   /* Horizontally center with auto, bottom margin for spacing */
   padding: 15px 30px;    /* Optional: bigger button */
   width: auto;           /* Optional: keep natural width */
+}
+
+/* Used for Import/Export buttons */
+#exportDataBtn, #importDataBtn {
+  padding: 15px 30px;    /* Optional: bigger button */
+  width: auto;           /* Optional: keep natural width */
+}
+
+/* Container for side-by-side buttons */
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
 /* Modal buttons (Cancel / Save) */
@@ -57,17 +72,18 @@ li button {
   font-size: 14px;
   width: 100%;
   border-radius: 6px;
-  border: none;
+  border: 1px solid #494848;               /* Subtle white border for polish */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Slight shadow for depth */  
   cursor: pointer;
 }
 
 /* Specific colors for Edit and Delete buttons */
-li button:nth-child(2) { /* Edit button */
+.editBtn {
   background: #ffc107;                 /* Amber color */
   color: black;
 }
 
-li button:nth-child(3) { /* Delete button */
+.deleteBtn {
   background: #f44336;                 /* Red color */
   color: white;
 }
@@ -76,7 +92,8 @@ li button:nth-child(3) { /* Delete button */
   background: #f44336;
   color: white;
   padding: 5px 10px;
-  border: none;
+  border: 1px solid #494848;               /* Subtle white border for polish */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Slight shadow for depth */  
   border-radius: 6px;
   cursor: pointer;
   margin-left: 10px;
@@ -211,10 +228,11 @@ li {
 
 #addItemContainer button {
   padding: 10px 20px;
-  border: none;
+  border: 1px solid #494848;               /* Subtle white border for polish */
   border-radius: 60px;
   background: #f34421;                  /* Blue accent color */
   color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Slight shadow for depth */  
   font-size: 16px;
   width: auto;      /* Stop it from filling the row */
   flex-shrink: 0;  /* Keep natural size on mobile */
@@ -276,7 +294,7 @@ li {
     max-height: 40vh; /* 40% of viewport height */
   }
 
-   /* Adjust add item container for mobile */
+  /* Adjust add item container for mobile */
   #addItemContainer {
     gap: 5px; /* Reduce gap between input and button */
   }
@@ -290,5 +308,5 @@ li {
     font-size: 14px;
     padding: 8px 16px;
   }
-   
+
 }
