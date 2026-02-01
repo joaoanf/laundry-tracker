@@ -8,7 +8,12 @@ body {
   max-width: 500px;                  /* Limits width for readability on desktop */
   margin: auto;                       /* Centers the app horizontally */
   padding: 20px;                      /* Adds space inside the page edges */
-  background: #0750e3fa;               /* Light gray background #c6c4c4;   */   
+  background: #0f0f23;                /* Dark futuristic background */
+  background-image: 
+    linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+  background-size: 20px 20px;         /* Soft geometric grid pattern */
+  color: #ffffff;                     /* White text for dark theme */
 }
 
 h1 {
@@ -112,12 +117,13 @@ ul {
 
 /* Individual laundry items */
 li {
-  background: white;                    /* White card background */
+  background: #1e1e3e;                  /* Slightly lighter dark card background */
+  color: #ffffff;                       /* White text */
   padding: 5px 10px;                        /* Inner spacing */
   font-size: 16px;
   margin-top: 10px;                     /* Space between items */
   border-radius: 6px;                   /* Rounded corners */
-  border: none;
+  border: 1px solid #555;                /* Light border for distinction */
   cursor: pointer;
   margin-left: 0; /* remove previous left margins */
   display: flex;                        /* Align text and buttons horizontally */
@@ -186,15 +192,21 @@ li {
   width: 140px;
   padding: 6px;
   font-size: 14px;
+  background: #2a2a3e;                   /* Dark background */
+  color: #ffffff;                        /* White text */
+  border: 1px solid #666;                /* Light border */
+  border-radius: 4px;
 }
 
 /* The modal content box */
 .modalContent {
-  background: white;                   /* White background */
+  background: #1e1e3e;                  /* Slightly lighter dark background for dark theme */
+  color: #ffffff;                       /* White text */
   width: 100%;                          /* Fill up to max width */
   max-width: 300px;                     /* Restrict maximum width */
   padding: 20px;                        /* Inner padding */
   border-radius: 10px;                  /* Rounded corners */
+  border: 1px solid #555;                /* Light border for distinction */
 }
 
 /* Hide elements by default */
@@ -222,7 +234,9 @@ li {
   flex: 1;                               /* Input takes remaining space */
   padding: 10px;
   border-radius: 6px;
-  border: 1px solid #ccc;               /* Light gray border */
+  border: 1px solid #666;                /* Light border for dark theme */
+  background: #2a2a3e;                   /* Dark background for input */
+  color: #ffffff;                        /* White text */
   font-size: 16px;
 }
 
@@ -251,23 +265,24 @@ li {
 
 /* Individual history “cards” */
 .historyCard {
-  background: #ffffff;
+  background: #1e1e3e;                  /* Slightly lighter dark background for dark theme */
   border-radius: 10px;
+  border: 1px solid #555;                /* Light border for distinction */
   padding: 12px 15px;
   margin-bottom: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Slight shadow for depth */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* Adjusted shadow for dark theme */
 }
 
 .historyCard h4 {
   margin: 0 0 6px 0;                     /* Title spacing */
   font-size: 14px;
-  color: #333;                           /* Dark gray for readability */
+  color: #ffffff;                        /* White text */
 }
 
 .historyCard p {
   margin: 0;
   font-size: 16px;
-  color: #555;                           /* Medium gray for text */
+  color: #cccccc;                        /* Light gray for text */
   word-wrap: break-word;                 /* Prevent long text overflow */
 }
 
