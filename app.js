@@ -162,16 +162,19 @@ function renderItems() {
 
     // Item text
     const textSpan = document.createElement("span");
-    let text = item.name;
-
-    if (item.lastWashed) {
-      text += ` — Lavado a ${item.lastWashed}`;
-    } else {
-      text += " — Nunca lavado";
-    }
-
-    textSpan.textContent = text;
+    textSpan.textContent = item.name;
     li.appendChild(textSpan);
+
+    // Wash date info (below, grey)
+    const dateSpan = document.createElement("div");
+    dateSpan.style.fontSize = "0.9em";
+    dateSpan.style.color = "#999";
+    if (item.lastWashed) {
+      dateSpan.textContent = `Lavado a ${item.lastWashed}`;
+    } else {
+      dateSpan.textContent = "Nunca lavado";
+    }
+    li.appendChild(dateSpan);
 
     // --- Edit Button ---
     const editBtn = document.createElement("button");
@@ -182,6 +185,11 @@ function renderItems() {
       const newName = prompt("Inserir novo nome:", oldName);
       if (newName && newName.trim()) {
         const trimmed = newName.trim();
+
+        if (trimmed.length > 40) {
+          alert("Nome demasiado longo. Máximo 40 caracteres.");
+          return;
+        }
 
         // Prevent duplicate names (case-insensitive) except for the current item
         const duplicate = data.items.some((it, i) => i !== index && it.name.toLowerCase() === trimmed.toLowerCase());
@@ -458,6 +466,11 @@ function closeModal() {
 addBtn.addEventListener("click", () => {
   const name = addInput.value.trim();
   if (!name) return;
+
+  if (name.length > 40) {
+    alert("Nome demasiado longo. Máximo 40 caracteres.");
+    return;
+  }
 
   if (data.items.some(i => i.name.toLowerCase() === name.toLowerCase())) {
     alert("Esse item já existe.");
