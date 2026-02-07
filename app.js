@@ -178,9 +178,27 @@ function renderItems() {
     editBtn.textContent = "Editar";
     editBtn.classList.add("editBtn");
     editBtn.addEventListener("click", () => {
-      const newName = prompt("Inserir novo nome:", item.name);
+      const oldName = item.name;
+      const newName = prompt("Inserir novo nome:", oldName);
       if (newName && newName.trim()) {
-        data.items[index].name = newName.trim();
+        const trimmed = newName.trim();
+
+        // Prevent duplicate names (case-insensitive) except for the current item
+        const duplicate = data.items.some((it, i) => i !== index && it.name.toLowerCase() === trimmed.toLowerCase());
+        if (duplicate) {
+          alert("Já existe um item com esse nome.");
+          return;
+        }
+
+        // Update item name
+        data.items[index].name = trimmed;
+
+        // Update wash history entries that referenced the old name
+        data.washHistory.forEach(ev => {
+          ev.items = ev.items.map(n => (n === oldName ? trimmed : n));
+        });
+
+        updateItemsLastWashed();
         saveData();
         renderItems();
       }
