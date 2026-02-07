@@ -265,12 +265,12 @@ li {
 
 /* Individual history “cards” */
 .historyCard {
-  background: #1e1e3e;                  /* Slightly lighter dark background for dark theme */
+  background: #3e3e5e;                  /* Slightly lighter dark background for dark theme */
   border-radius: 10px;
-  border: 1px solid #555;                /* Light border for distinction */
+  border: 2px solid #555;                /* Light border for distinction */
   padding: 12px 15px;
   margin-bottom: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.3); /* Adjusted shadow for dark theme */
+  box-shadow: 0 5px 5px rgba(0,0,0,0.3); /* Adjusted shadow for dark theme */
 }
 
 .historyCard h4 {
