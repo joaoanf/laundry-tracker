@@ -157,7 +157,12 @@ const importFileInput = document.getElementById("importFileInput");
 function renderItems() {
   list.innerHTML = "";
 
-  data.items.forEach((item, index) => {
+  const sortedItems = [...data.items].sort((a, b) =>
+    a.name.localeCompare(b.name, "pt", { sensitivity: "base" })
+  );
+
+  sortedItems.forEach(item => {
+    const index = data.items.indexOf(item);
     const li = document.createElement("li");
 
     // Item text
