@@ -1,8 +1,8 @@
-const CACHE_NAME = "laundry-tracker-v10-2";
+const CACHE_NAME = "laundry-tracker-v10-3";
 const PREFIX = "laundry-tracker-v10-";
-const SHELL = ["./", "./index.html", "./style.css", "./app.js", "./manifest.json", "./icon-192.png", "./icon-512.png"];
+const SHELL = ["./", "./index.html", "./style.css?v=10.3", "./app.js?v=10.3", "./manifest.json?v=10.3", "./icon-192.png", "./icon-512.png"];
 self.addEventListener("install", event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(SHELL)));
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(SHELL.map(path => new Request(path, { cache: "reload" })))));
 });
 self.addEventListener("activate", event => {
   // Only remove caches owned by this version; keep older app folders intact.

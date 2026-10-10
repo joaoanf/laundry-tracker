@@ -278,7 +278,7 @@ $("importFileInput").addEventListener("change", async event => {
 });
 renderItems();
 if ("serviceWorker" in navigator && window.isSecureContext) {
-  navigator.serviceWorker.register("./service-worker.js").catch(() => {
+  navigator.serviceWorker.register("./service-worker.js", { updateViaCache: "none" }).catch(() => {
     notify("A aplicação funciona, mas não foi possível ativar o modo offline.");
   });
 }
